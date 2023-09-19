@@ -15,10 +15,11 @@ def filter_datum(fields: List[str],
         redaction: a string used for obfuscating fields
         message: a string, representing the log line
         separator: a string used to separate all fields in the log line'''
+    filter_log_line = message
     for field in fields:
-        regex = re.compile(f'{field}=.+?(?=;)')
-        message = re.sub(
+        regex = re.compile(f'({field}=)(.+?)(?={separator})')
+        filter_log_line = re.sub(
             regex,
             f'{field}={redaction}',
-            message)
-    return re.sub(';', separator, message)
+            filter_log_line)
+    return re.sub(';', separator, filter_log_line)
