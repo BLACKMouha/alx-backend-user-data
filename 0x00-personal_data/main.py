@@ -11,4 +11,4 @@ messages = [
     "name=bob;email=bob@dylan.com;password=bobbycool;date_of_birth=03/04/1993;"]
 
 for message in messages:
-    print(filter_datum(fields, 'xxx', message, '&'))
+    print(filter_datum(fields, 'xxx', message, ';'))
