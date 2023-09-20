@@ -1,0 +1,10 @@
+bin
+include
+lib
+lib64
+share
+*.zip
+pyvenv.cfg
+__pycache__
+.DS_Store
+__MACOSX
