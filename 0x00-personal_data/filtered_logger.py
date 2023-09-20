@@ -4,7 +4,7 @@ import logging
 import re
 from typing import List
 import csv
-import os
+from os import getenv
 import mysql.connector
 
 with open('user_data.csv', mode='r') as f:
@@ -47,23 +47,17 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
-    return logger
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     '''Returns a conncetion to a database'''
-    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    db = os.getenv('PERSONAL_DATA_DB_NAME')
+    host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    user = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db = getenv('PERSONAL_DATA_DB_NAME')
 
-    config = {
-        'host': host,
-        'user': user,
-        'password': password,
-        'database': db
-    }
-    return mysql.connector.connection.MySQLConnection(**config)
+    config = {'host': host, 'user': user, 'passwor': password, database: 'db'}
+    return mysql.connector.MySQLConnection(**config)
 
 
 class RedactingFormatter(logging.Formatter):
