@@ -43,4 +43,4 @@ class BasicAuth(Auth):
                 and ':' in decoded_base64_authorization_header:
             r = decoded_base64_authorization_header.split(':')
             return (r[0], r[1])
-        return None
+        return (None, None)
