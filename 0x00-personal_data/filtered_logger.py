@@ -57,7 +57,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db = getenv('PERSONAL_DATA_DB_NAME', 'holberton')
 
     config = {'host': host, 'user': user, 'password': password, 'database': db}
-    return mysql.connector.MySQLConnection(**config)
+    return mysql.connector.connection.MySQLConnection(**config)
 
 
 class RedactingFormatter(logging.Formatter):
