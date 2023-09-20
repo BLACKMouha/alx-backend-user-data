@@ -13,14 +13,15 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
-if os.getenv('AUTH_TYPE').lower() == 'auth':
+if os.getenv('AUTH_TYPE') == 'auth':
     from api.v1.auth.auth import Auth
     auth = Auth()
 
 
 @app.before_request
 def before_request():
-    '''Excuted before handling any request'''
+    '''Excuted before handling any request
+    '''
     if auth is None:
         return
     excluded_paths = [
