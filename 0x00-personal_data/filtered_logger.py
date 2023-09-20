@@ -58,8 +58,12 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
     db = getenv('PERSONAL_DATA_DB_NAME', 'holberton')
 
-    config = {'host': host, 'user': user, 'password': password, 'database': db}
-    return mysql.connector.connection.MySQLConnection(**config)
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=db
+    )
 
 
 class RedactingFormatter(logging.Formatter):
@@ -80,3 +84,25 @@ class RedactingFormatter(logging.Formatter):
         s = self.FORMAT % {'name': record.name, 'levelname': record.levelname,
                            'asctime': datetime.now(), 'message': record.msg}
         return filter_datum(self.fields, self.REDACTION, s, self.SEPARATOR)
+
+
+def main():
+    '''Retrieving data from the database and logging them'''
+    try:
+        db_connection = get_db()
+        cursor = db_connection.cursor()
+        cursor.execute('SELECT * FROM users')
+        logger = get_logger()
+        for row in cursor.fetchall():
+            logger.info(row)
+    except Exception as e:
+        print(e)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'db_connection' in locals() and db_connection.is_connected:
+            db_connection.close()
+
+
+if __name__ == '__main__':
+    main()
