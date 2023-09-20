@@ -2,6 +2,7 @@
 '''basci_auth module'''
 
 from api.v1.auth.auth import Auth
+import base64
 
 
 class BasicAuth(Auth):
@@ -15,4 +16,21 @@ class BasicAuth(Auth):
         if type(authorization_header) is str\
                 and authorization_header.startswith('Basic '):
             return authorization_header[6:]
+        return None
+
+    def decode_base64_authorization_header(
+            self,
+            base64_authorization_header: str) -> str:
+        '''Decodes the Base64 part of a Basic Authorization header
+        '''
+        if type(base64_authorization_header) is str:
+            if base64_authorization_header.startswith('Basic '):
+                b = self.extract_base64_authorization_header(
+                    base64_authorization_header)
+            else:
+                b = base64_authorization_header
+            try:
+                return base64.b64decode(b).decode()
+            except Exception as e:
+                return None
         return None
