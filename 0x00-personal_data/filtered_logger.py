@@ -54,20 +54,16 @@ def get_db() -> MySQLConnection:
     from os import getenv
     import mysql.connector
 
-    host = getenv('PERSONAL_DATA_DB_HOST', None)
-    user = getenv('PERSONAL_DATA_DB_USERNAME', None)
-    password = getenv('PERSONAL_DATA_DB_PASSWORD', None)
-    db = getenv('PERSONAL_DATA_DB_NAME', None)
+    host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    user = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db = getenv('PERSONAL_DATA_DB_NAME', '')
 
-    try:
-        return mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db)
-    except mysql.connector.Error as mce:
-        print(mce.msg)
-        return None
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=db)
 
 
 class RedactingFormatter(logging.Formatter):
