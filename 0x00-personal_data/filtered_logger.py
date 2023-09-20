@@ -3,6 +3,13 @@
 import logging
 import re
 from typing import List
+import csv
+
+with open('user_data.csv', mode='r') as f:
+    reader = csv.reader(f)
+    headers = tuple(next(reader))
+
+PII_FIELDS = headers[1:6]
 
 
 def filter_datum(fields: List[str],
@@ -23,6 +30,20 @@ def filter_datum(fields: List[str],
             f'{field}={redaction}',
             filter_log_line)
     return re.sub(';', separator, filter_log_line)
+
+
+def get_logger() -> logging.Logger:
+    '''Creates a logger'''
+    logger = logging.Logger(name='user_data', level=logging.INFO)
+    logger.propagate = False
+
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+
+    handler = logging.StreamHandler
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
 
 
 class RedactingFormatter(logging.Formatter):
