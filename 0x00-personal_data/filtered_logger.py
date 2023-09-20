@@ -5,6 +5,8 @@ import re
 from typing import List
 import csv
 
+from mysql.connector.connection import MySQLConnection
+
 with open('user_data.csv', mode='r') as f:
     reader = csv.reader(f)
     headers = tuple(next(reader))
@@ -47,7 +49,7 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
 
-def get_db():
+def get_db() -> MySQLConnection:
     '''Returns a conncetion to a database'''
     from os import getenv
     import mysql.connector
