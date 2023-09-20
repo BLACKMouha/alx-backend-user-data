@@ -8,3 +8,5 @@ pyvenv.cfg
 __pycache__
 .DS_Store
 __MACOSX
+*main*.*
+0x01-Basic_authentication/.db_User.json

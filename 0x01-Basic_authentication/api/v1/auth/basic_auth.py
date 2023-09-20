@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''basci_auth module'''
 
+from typing import TypeVar
 from api.v1.auth.auth import Auth
 import base64
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -38,9 +40,29 @@ class BasicAuth(Auth):
     def extract_user_credentials(
             self,
             decoded_base64_authorization_header: str) -> (str, str):
-        '''Returns the user email and password from the Base64 decoded value'''
+        '''Returns the user email and password from the Base64 decoded value
+        '''
         if type(decoded_base64_authorization_header) is str\
                 and ':' in decoded_base64_authorization_header:
             r = decoded_base64_authorization_header.split(':')
             return (r[0], r[1])
         return (None, None)
+
+    def user_object_from_credentials(
+            self,
+            user_email: str,
+            user_pwd: str) -> TypeVar('User'):
+        '''Returns the User instance that match the given email and password.
+        '''
+        if all(isinstance(var, str) for var in [user_email, user_pwd]):
+            try:
+                users = User.search({'email': user_email})
+                if users:
+                    for user in users:
+                        if User.is_valid_password(user, user_pwd):
+                            return user
+                    return None
+                return None
+            except Exception as e:
+                return None
+        return None
