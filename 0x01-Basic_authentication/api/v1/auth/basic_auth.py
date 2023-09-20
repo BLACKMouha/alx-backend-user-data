@@ -5,10 +5,5 @@ from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
-    '''`Basic` Authentication class manager
-    '''
-
-    def extract_base64_authorization_header(self, authorization_header: str) -> str:
-        if authorization_header.startswith('Basic '):
-            return authorization_header[6:]
-        return None
+    '''`Basic` Authentication class manager'''
+    pass
