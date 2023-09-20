@@ -47,6 +47,27 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
 
+def get_db():
+    '''Returns a conncetion to a database'''
+    from os import getenv
+    import mysql.connector
+
+    host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    user = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db = getenv('PERSONAL_DATA_DB_NAME', '')
+
+    try:
+        return mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db)
+    except mysql.connector.Error as mce:
+        print(mce.msg)
+        return None
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
