@@ -9,7 +9,7 @@ with open('user_data.csv', mode='r') as f:
     reader = csv.reader(f)
     headers = tuple(next(reader))
 
-PII_FIELDS = headers[1:6]
+PII_FIELDS = headers[0:5]
 
 
 def filter_datum(fields: List[str],
