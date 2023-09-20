@@ -20,6 +20,7 @@ if os.getenv('AUTH_TYPE').lower() == 'auth':
 
 @app.before_request
 def before_request():
+    '''Excuted before handling any request'''
     if auth is None:
         return
     excluded_paths = [
