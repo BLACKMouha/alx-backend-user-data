@@ -13,7 +13,7 @@ class Auth:
             return True
         if not path.endswith('/'):
             path = path + '/'
-        return not path in excluded_paths
+        return path not in excluded_paths
 
     def authorization_header(self, request=None) -> str:
         '''authorization_header method'''
