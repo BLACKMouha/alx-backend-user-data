@@ -45,7 +45,13 @@ class BasicAuth(Auth):
         if type(decoded_base64_authorization_header) is str\
                 and ':' in decoded_base64_authorization_header:
             r = decoded_base64_authorization_header.split(':')
-            return (r[0], r[1])
+            if len(r) == 2:
+                return (r[0], r[1])
+            else:
+                pwd = ''
+                for s in r[1:]:
+                    pwd += s + ':'
+                return (r[0], pwd[:-1])
         return (None, None)
 
     def user_object_from_credentials(
