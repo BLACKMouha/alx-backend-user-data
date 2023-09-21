@@ -12,11 +12,18 @@ class Auth:
         paths. All paths that are in the excluded paths don't need
         authorization to be accessed.
         '''
+        import re
+
         if not path or not excluded_paths:
             return True
-        if not path.endswith('/'):
-            path = path + '/'
-        return path not in excluded_paths
+        for excluded_path in excluded_paths:
+            regex = re.compile('{}'.format(
+                excluded_path.replace('/', '\\/').replace('*', '.*')))
+            regex.search(path)
+            match = regex.search(string=path)
+            if match:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         '''authorization_header method'''
