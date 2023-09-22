@@ -10,3 +10,5 @@ __pycache__
 __MACOSX
 *main*.*
 0x01-Basic_authentication/.db_User.json
+.vscode/settings.json
+0x02-Session_authentication/.db_User.json
