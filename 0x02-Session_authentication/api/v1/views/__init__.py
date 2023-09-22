@@ -12,4 +12,4 @@ User.load_from_file()
 
 import os
 if os.getenv('AUTH_TYPE', None) == 'session_auth':
-    from api.v1.auth.session_auth import login
+    from api.v1.views.session_auth import login
