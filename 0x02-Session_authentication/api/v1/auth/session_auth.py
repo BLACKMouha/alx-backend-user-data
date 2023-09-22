@@ -29,4 +29,4 @@ class SessionAuth(Auth):
         '''Retrieves the User object based on a cookie value'''
         session_id_from_cookie = self.session_cookie(request)
         user_id = self.user_id_for_session_id(session_id_from_cookie)
-        return User.get(user_id).to_json() if User.get(user_id) else None
+        return User.get(user_id) if User.get(user_id) else None
