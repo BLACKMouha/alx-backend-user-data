@@ -2,7 +2,7 @@
 '''session_auth module'''
 
 from api.v1.views import app_views
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from models.user import User
 import os
 
@@ -34,3 +34,18 @@ def login():
                 session_id)
             return resp
     return jsonify({"error": "no user found for this email"}), 404
+
+
+@app_views.route(
+        '/auth_session/logout',
+        methods=['DELETE'],
+        strict_slashes=False)
+def logout():
+    '''Kills a user session
+    '''
+    if os.getenv('AUTH_TYPE') == 'session_auth':
+        from api.v1.app import auth
+        b = auth.destroy_session(request)
+        if b:
+            return jsonify({}), 200
+        return False, abort(404)
