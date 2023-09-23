@@ -32,6 +32,7 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
+        '''Creates and persists in the database a new user'''
         if self.__session is None:
             self.__session = self._session
         if all(isinstance(el, str) for el in [email, hashed_password]):
@@ -61,9 +62,11 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs):
         '''Updates an existing User'''
-        user = self.find_user_by(id=user_id)
-        if not user:
+        all_users = self.__session.query(User).all()
+        ids = [user.id for user in all_users]
+        if user_id not in ids:
             raise ValueError
+        user = self.find_user_by(id=user_id)
         for k in kwargs:
             setattr(user, k, kwargs[k])
         self.__session.commit()
