@@ -43,7 +43,7 @@ class DB:
         else:
             return None
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         '''Retrieves an existing user from the database'''
         if self.__session is None:
             self.__session = self._session
