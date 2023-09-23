@@ -66,7 +66,7 @@ class DB:
         if not user:
             return None
         for k in kwargs:
-            if not k in user.__table__.columns:
+            if k not in user.__table__.columns:
                 raise ValueError
             setattr(user, k, kwargs[k])
         self.__session.commit()
