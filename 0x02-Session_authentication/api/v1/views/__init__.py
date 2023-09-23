@@ -11,5 +11,9 @@ from api.v1.views.users import *
 User.load_from_file()
 
 import os
-if os.getenv('AUTH_TYPE', None) in ['session_auth', 'session_exp_auth']:
+session_auth_types = [
+    'session_auth',
+    'session_exp_auth',
+    'session_db_auth']
+if os.getenv('AUTH_TYPE', None) in session_auth_types:
     from api.v1.views.session_auth import login
