@@ -25,14 +25,13 @@ def login():
         user_obj = user_objs[0]
         if not User.is_valid_password(user_obj, user_pwd):
             return jsonify({"error": "wrong password"}), 401
-        if os.getenv('AUTH_TYPE', None) == 'session_auth':
-            from api.v1.app import auth
-            session_id = auth.create_session(user_obj.id)
-            resp = jsonify(user_obj.to_json())
-            resp.set_cookie(
-                os.getenv('SESSION_NAME', '_my_session'),
-                session_id)
-            return resp
+        from api.v1.app import auth
+        session_id = auth.create_session(user_obj.id)
+        resp = jsonify(user_obj.to_json())
+        resp.set_cookie(
+            os.getenv('SESSION_NAME', '_my_session'),
+            session_id)
+        return resp
     return jsonify({"error": "no user found for this email"}), 404
 
 
@@ -43,9 +42,8 @@ def login():
 def logout():
     '''Kills a user session
     '''
-    if os.getenv('AUTH_TYPE') == 'session_auth':
-        from api.v1.app import auth
-        b = auth.destroy_session(request)
-        if b:
-            return jsonify({}), 200
-        return False, abort(404)
+    from api.v1.app import auth
+    b = auth.destroy_session(request)
+    if b:
+        return jsonify({}), 200
+    return False, abort(404)
