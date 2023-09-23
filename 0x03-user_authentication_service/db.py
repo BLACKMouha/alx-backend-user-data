@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """DB module
 """
-from typing import TypeVar
+from typing import Optional
 from user import Base, User
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class DB:
@@ -30,7 +32,9 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> User:
+    def add_user(self, email: str, hashed_password: str) -> Optional[User]:
+        if self.__session is None:
+            self.__session = self._session
         if all(isinstance(el, str) for el in [email, hashed_password]):
             new_user = User(email=email, hashed_password=hashed_password)
             self.__session = self._session
@@ -39,3 +43,19 @@ class DB:
             return new_user
         else:
             return None
+
+    def find_user_by(self, **kwargs: dict) -> Optional[User]:
+        '''Retrieves an existing user from the database'''
+        if self.__session is None:
+            self.__session = self._session
+        all_users = self.__session.query(User).all()
+        if all_users:
+            for user in all_users:
+                for k in kwargs:
+                    if k not in User.__table__.columns:
+                        raise InvalidRequestError
+                    if getattr(user, k) != kwargs[k]:
+                        raise NoResultFound
+                return user
+            return None
+        return None
