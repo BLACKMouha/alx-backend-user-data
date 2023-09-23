@@ -14,10 +14,23 @@ class SessionDBAuth(SessionExpAuth):
         if not user_id:
             return None
         session_id = super().create_session(user_id)
-        user_session_obj = UserSession(user_id=user_id,
-                                       session_id=session_id)
-        user_session_obj.save()
+        if session_id:
+            user_session_obj = UserSession(
+                user_id=user_id,
+                session_id=session_id)
+            user_session_obj.save()
         return session_id
+
+    def user_id_for_session_id(self, session_id=None):
+        '''Returns the user ID based on the session ID'''
+        if not session_id:
+            return None
+        user_session_objs = UserSession.search({'session_id': session_id})
+        if len(user_session_objs) > 0:
+            user_session_obj = user_session_objs[0]
+            return user_session_obj.user_id
+        else:
+            return None
 
     def destroy_session(self, request=None):
         '''Deletes the user session'''
@@ -29,8 +42,10 @@ class SessionDBAuth(SessionExpAuth):
             return False
         user_session_objs = UserSession.search(
             {'session_id': session_id_from_cookie})
-        user_session_obj = user_session_objs[0]
-        if not user_session_obj:
-            return False
-        del user_session_obj
-        return True
+        if len(user_session_objs) > 0:
+            user_session_obj = user_session_objs[0]
+            if not user_session_obj:
+                return False
+            user_session_obj.remove()
+            return True
+        return False
