@@ -60,14 +60,14 @@ class DB:
             return None
         return None
 
-    def update_user(self, user_id: int, **kwargs):
+    def update_user(self, user_id: int, **kwargs) -> None:
         '''Updates an existing User'''
-        all_users = self.__session.query(User).all()
-        ids = [user.id for user in all_users]
-        if user_id not in ids:
-            raise ValueError
         user = self.find_user_by(id=user_id)
+        if not user:
+            return None
         for k in kwargs:
+            if not k in user.__table__.columns:
+                raise ValueError
             setattr(user, k, kwargs[k])
         self.__session.commit()
         return None
