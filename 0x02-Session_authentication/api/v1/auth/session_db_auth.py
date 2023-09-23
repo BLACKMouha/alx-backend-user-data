@@ -28,7 +28,7 @@ class SessionDBAuth(SessionExpAuth):
         user_session_objs = UserSession.search({'session_id': session_id})
         if len(user_session_objs) > 0:
             user_session_obj = user_session_objs[0]
-            return user_session_obj.user_id
+            return user_session_obj.to_json().get('user_id', None)
         else:
             return None
 
