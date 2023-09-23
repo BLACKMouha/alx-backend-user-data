@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """DB module
 """
-from typing import Optional
 from user import Base, User
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -32,7 +31,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> Optional[User]:
+    def add_user(self, email: str, hashed_password: str) -> User:
         if self.__session is None:
             self.__session = self._session
         if all(isinstance(el, str) for el in [email, hashed_password]):
@@ -44,7 +43,7 @@ class DB:
         else:
             return None
 
-    def find_user_by(self, **kwargs: dict) -> Optional[User]:
+    def find_user_by(self, **kwargs: dict) -> User:
         '''Retrieves an existing user from the database'''
         if self.__session is None:
             self.__session = self._session
