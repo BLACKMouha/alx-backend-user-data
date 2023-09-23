@@ -30,7 +30,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar('Base'):
+    def add_user(self, email: str, hashed_password: str) -> User:
         if all(isinstance(el, str) for el in [email, hashed_password]):
             new_user = User(email=email, hashed_password=hashed_password)
             self.__session = self._session
