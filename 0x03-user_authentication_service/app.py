@@ -24,19 +24,14 @@ d.__contains__('a')
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def users():
     '''User registeration endpoint'''
-    if all(request.form.__contains__(k) for k in request.form):
-        email = request.form.get('email', None)
-        password = request.form.get('password', None)
-        print(email, password)
-        try:
-            user = AUTH.register_user(
-                email=email, password=password)
-            return jsonify({'email': email, 'message': 'user created'}), 200
-        except ValueError:
-            return jsonify({'message': 'email already registered'}), 200
-    else:
-        return jsonify({'message': 'missing email or password'}), 404
-
+    email = request.form.get('email', None)
+    password = request.form.get('password', None)
+    try:
+        AUTH.register_user(
+            email=email, password=password)
+        return jsonify({'email': email, 'message': 'user created'}), 200
+    except ValueError:
+        return jsonify({'message': 'email already registered'}), 400
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
