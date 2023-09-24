@@ -96,3 +96,18 @@ class Auth:
         reset_token = _generate_uuid()
         self._db.update_user(user_id=user.id, reset_token=reset_token)
         return reset_token
+    
+
+    def update_password(self, reset_token: str, password: str):
+        '''Updating user password for reset purpose'''
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+        except Exception:
+            user = None
+        if not user:
+            raise ValueError
+        hashed_password = _hash_password(password=password)
+        self._db.update_user(
+            user_id=user.id,
+            hashed_password=hashed_password,
+            reset_token=None)
