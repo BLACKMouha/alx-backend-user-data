@@ -42,10 +42,9 @@ class Auth:
         '''Checking if the arguments matches a user'''
         try:
             user = self._db.find_user_by(email=email)
-            hashed_password = user.hashed_password
-            return bcrypt.checkpw(password.encode(), hashed_password)
+            if user:
+                hashed_password = user.hashed_password
+                return bcrypt.checkpw(password.encode(), hashed_password)
         except Exception:
-            print('exception raised: No result found!')
             return False
-        finally:
-            return False
+        return False
