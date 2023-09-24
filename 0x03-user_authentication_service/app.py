@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''Flask app'''
 
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, url_for, redirect
 from sqlalchemy.orm.exc import NoResultFound
 from auth import Auth
 
@@ -33,7 +33,7 @@ def users():
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
-    '''Checks if a session exists'''
+    '''Login'''
     email = request.form.get('email', None)
     password = password = request.form.get('password', None)
     if not AUTH.valid_login(email=email, password=password):
@@ -42,6 +42,17 @@ def login():
     resp = jsonify({"email": email, "message": "logged in"})
     resp.set_cookie('session_id', session_id)
     return resp
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    '''Logout'''
+    session_id = request.cookies.get('session_id', None)
+    user = AUTH.get_user_from_session_id(session_id=session_id)
+    if not user:
+        abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect(url_for('root'))
 
 
 if __name__ == "__main__":
