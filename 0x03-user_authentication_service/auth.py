@@ -54,7 +54,7 @@ class Auth:
         except Exception:
             return False
         return False
-    
+
     def create_session(self, email: str) -> str:
         '''Creates a session'''
         try:
