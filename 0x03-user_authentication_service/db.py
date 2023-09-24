@@ -59,10 +59,9 @@ class DB:
         '''Updates an existing User'''
         user = self.find_user_by(id=user_id)
         if not user:
-            return None
+            return
         for k in kwargs:
             if k not in user.__table__.columns:
                 raise ValueError
             setattr(user, k, kwargs[k])
         self._session.commit()
-        return None
