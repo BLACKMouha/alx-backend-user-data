@@ -11,7 +11,7 @@ def root() -> dict:
     """ GET /
     Returns {'message': 'bienvenue'}
     """
-    return jsonify({'message': 'bienvenue'})
+    return jsonify({"message": "Bienvenue"})
 
 
 
