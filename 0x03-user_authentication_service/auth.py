@@ -44,6 +44,6 @@ class Auth:
             user = self._db.find_user_by(email=email)
             hashed_password = user.hashed_password
             return bcrypt.checkpw(password.encode(), hashed_password)
-        except NoResultFound:
+        except Exception:
             print('exception raised: No result found!')
             return False
