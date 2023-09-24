@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''auth module'''
 import bcrypt
+from sqlalchemy.orm.exc import NoResultFound
 from db import DB
 from user import User
 
@@ -16,16 +17,23 @@ class Auth:
 
     def __init__(self):
         self._db = DB()
-        self.__session = self._db._session
 
     def register_user(self, email: str, password: str) -> User:
         '''Creates and saves a new User instance in the database if the email
         does not exist after hashing the password
         '''
-        if self._db.find_user_by(email=email) is not None:
-            raise ValueError(f'User {email} already exists')
-        hashed_password = _hash_password(password)
-        new_user = User(email=email, hashed_password=hashed_password)
-        self.__session.add(new_user)
-        self.__session.commit()
-        return new_user
+        try:
+            if self._db.find_user_by(email=email) is not None:
+                raise ValueError(f'User {email} already exists')
+            else:
+                hashed_password = _hash_password(password)
+                new_user = User(email=email, hashed_password=hashed_password)
+                self._db._session.add(new_user)
+                self._db._session.commit()
+                return new_user
+        except NoResultFound:
+            hashed_password = _hash_password(password)
+            new_user = User(email=email, hashed_password=hashed_password)
+            self._db._session.add(new_user)
+            self._db._session.commit()
+            return new_user
