@@ -33,22 +33,17 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         '''Creates and persists in the database a new user'''
-        if self.__session is None:
-            self.__session = self._session
         if all(isinstance(el, str) for el in [email, hashed_password]):
             new_user = User(email=email, hashed_password=hashed_password)
-            self.__session = self._session
-            self.__session.add(new_user)
-            self.__session.commit()
+            self._session.add(new_user)
+            self._session.commit()
             return new_user
         else:
             return None
 
     def find_user_by(self, **kwargs) -> User:
         '''Retrieves an existing user from the database'''
-        if self.__session is None:
-            self.__session = self._session
-        all_users = self.__session.query(User).all()
+        all_users = self._session.query(User).all()
         if all_users:
             for user in all_users:
                 for k in kwargs:
@@ -69,5 +64,5 @@ class DB:
             if k not in user.__table__.columns:
                 raise ValueError
             setattr(user, k, kwargs[k])
-        self.__session.commit()
+        self._session.commit()
         return None
