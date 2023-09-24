@@ -47,3 +47,5 @@ class Auth:
         except Exception:
             print('exception raised: No result found!')
             return False
+        finally:
+            return False
